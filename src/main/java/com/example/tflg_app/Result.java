@@ -89,6 +89,9 @@ public class Result {
         }
         return null;
     }
+    public Err getErrType(){
+        return err;
+    }
 
     @Override
     public boolean equals(Object o) {

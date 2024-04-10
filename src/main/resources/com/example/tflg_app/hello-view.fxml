@@ -5,34 +5,35 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" minHeight="400.0" minWidth="400.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tflg_app.AnalyzerController">
+<VBox alignment="CENTER" minHeight="400.0" minWidth="500.0" prefHeight="400.0" prefWidth="500.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tflg_app.AnalyzerController">
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
 
-    <Label fx:id="welcomeText" text="Анализируемая строка" textAlignment="JUSTIFY">
+    <Label text="Анализируемая строка" textAlignment="JUSTIFY">
         <font>
-            <Font name="Times New Roman" size="16.0"/>
+            <Font name="Times New Roman" size="16.0" />
         </font>
     </Label>
-    <TextField fx:id="stringField"/>
+    <TextField fx:id="stringField" />
+
     <Label text="Список ID">
         <font>
-            <Font name="Times New Roman" size="16.0"/>
+            <Font name="Times New Roman" size="16.0" />
         </font>
     </Label>
-    <TextField/>
+    <TextField fx:id="idField" />
+
     <Label text="Список CONST">
         <font>
-            <Font name="Times New Roman" size="16.0"/>
+            <Font name="Times New Roman" size="16.0" />
         </font>
     </Label>
-    <TextField/>
+    <TextField fx:id="constField" />
     <Label text="Ошибка">
         <font>
-            <Font name="Times New Roman" size="16.0"/>
+            <Font name="Times New Roman" size="16.0" />
         </font>
     </Label>
-    <TextField/>
+   <TextArea fx:id="errorField" prefHeight="200.0" prefWidth="200.0" />
 </VBox>

@@ -1,14 +1,55 @@
 package com.example.tflg_app;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.fxml.Initializable;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
-public class AnalyzerController {
-    @FXML
-    private Label welcomeText;
+import java.net.URL;
+import java.util.ResourceBundle;
 
+public class AnalyzerController implements Initializable {
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+    private TextField stringField;
+    @FXML
+    private TextField idField;
+    @FXML
+    private TextField constField;
+    @FXML
+    private TextArea errorField;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        stringField.textProperty().addListener((observable, oldValue, newValue) -> {
+            Result result = CheckLoopOperator.Check(newValue);
+            idField.setText(result.getListOfIDs().toString());
+            constField.setText(result.getListOfConst().toString());
+            /*if (result.getErrType() == Err.NoError) {
+                errorField.setText("");
+            } else if ((result.getErrType() == Err.UnrecognizedError)
+                    || (result.getErrType() == Err.OverflowExpressions)
+                    || (result.getErrType() == Err.ReservedWordException)
+                    || (result.getErrType() == Err.IntBoundsException)
+                    || (result.getErrType() == Err.OverflowID)
+                    || (result.getErrType() == Err.UnexpectedSymbolException)
+                    || (result.getErrType() == Err.OutOfRange)){
+                errorField.setText(result.getErr() + newValue.substring(0, result.getErrPosition()));
+            } else {
+                errorField.setText(result.getErr() + " на позиции " + result.getErrPosition());
+            }*/
+
+            if (result.getErrType() != Err.NoError){
+                errorField.setText("Ошибка: " + result.getErr() + " на позиции "
+                        + result.getErrPosition() + " после " + newValue.substring(0, result.getErrPosition()));
+                idField.setText("");
+                constField.setText("");
+            }
+            else {
+                errorField.setText("");
+                idField.setText("IDs: " + result.getListOfIDs());
+                constField.setText("Константы: " + result.getListOfConst());
+
+            }
+        });
     }
 }
