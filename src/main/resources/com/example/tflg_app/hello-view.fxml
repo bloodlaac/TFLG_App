@@ -22,18 +22,18 @@
             <Font name="Times New Roman" size="16.0" />
         </font>
     </Label>
-    <TextField fx:id="idField" />
+    <TextField fx:id="idField" editable="false" />
 
     <Label text="Список CONST">
         <font>
             <Font name="Times New Roman" size="16.0" />
         </font>
     </Label>
-    <TextField fx:id="constField" />
+    <TextField fx:id="constField" editable="false" />
     <Label text="Ошибка">
         <font>
             <Font name="Times New Roman" size="16.0" />
         </font>
     </Label>
-   <TextArea fx:id="errorField" prefHeight="200.0" prefWidth="200.0" />
+   <TextArea fx:id="errorField" editable="false" prefHeight="200.0" prefWidth="200.0" />
 </VBox>

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class CheckLoopOperator {
     private static int logCounter = 0;
-    private static int pos;
+    private static int pos = 0;
     private static String input;
     private static Err err;
     private static int errPos;
@@ -18,13 +18,18 @@ public class CheckLoopOperator {
     }
 
     public static Result Check(String inputString) {
-        pos = 0;
+        Reset();
         input = inputString;
+        LoopOperator();
+        return new Result(errPos, err, listOfIDs, listOfConst);
+    }
+
+    private static void Reset() {
+        logCounter = 0;
+        pos = 0;
         listOfIDs = new LinkedList<>();
         listOfConst = new LinkedList<>();
         SetError(Err.NoError, -1);
-        LoopOperator();
-        return new Result(errPos, err, listOfIDs, listOfConst);
     }
 
     private static void LoopOperator() {
@@ -32,15 +37,17 @@ public class CheckLoopOperator {
         StringBuilder id = new StringBuilder();
         StringBuilder constant = new StringBuilder();
 
+        input = input.toUpperCase();
+        input += '¶';
+
         while ((state != States.Error) && (state != States.Final)) {
-            if (pos >= input.length()){
+            if (pos >= input.length()) {
                 SetError(Err.OutOfRange, pos);
                 state = States.Error;
-            }
-            else {
+            } else {
                 switch (state) {
                     case Start -> {
-                        if ((input.charAt(pos) == 'w') || (input.charAt(pos) == 'W')) {
+                        if ((input.charAt(pos) == 'W')) {
                             state = States.WHL1;
                         } else {
                             SetError(Err.LetterExpected, pos);
@@ -48,7 +55,7 @@ public class CheckLoopOperator {
                         }
                     }
                     case WHL1 -> {
-                        if ((input.charAt(pos) == 'h') || (input.charAt(pos) == 'H')) {
+                        if ((input.charAt(pos) == 'H')) {
                             state = States.WHL2;
                         } else {
                             SetError(Err.LetterExpected, pos);
@@ -56,7 +63,7 @@ public class CheckLoopOperator {
                         }
                     }
                     case WHL2 -> {
-                        if ((input.charAt(pos) == 'i') || (input.charAt(pos) == 'I')) {
+                        if ((input.charAt(pos) == 'I')) {
                             state = States.WHL3;
                         } else {
                             SetError(Err.LetterExpected, pos);
@@ -64,7 +71,7 @@ public class CheckLoopOperator {
                         }
                     }
                     case WHL3 -> {
-                        if ((input.charAt(pos) == 'l') || (input.charAt(pos) == 'L')) {
+                        if ((input.charAt(pos) == 'L')) {
                             state = States.WHL4;
                         } else {
                             SetError(Err.LetterExpected, pos);
@@ -72,7 +79,7 @@ public class CheckLoopOperator {
                         }
                     }
                     case WHL4 -> {
-                        if ((input.charAt(pos) == 'e') || (input.charAt(pos) == 'E')) {
+                        if ((input.charAt(pos) == 'E')) {
                             state = States.WHL5;
                         } else {
                             SetError(Err.LetterExpected, pos);
@@ -121,9 +128,8 @@ public class CheckLoopOperator {
                     case V1ID -> {
                         if (Character.isLetterOrDigit(input.charAt(pos)) || (input.charAt(pos) == '_')) {
                             id.append(input.charAt(pos));
-                            String id2 = id.toString().toUpperCase();
-                            if ((id2.equals("FOR")) || (id2.equals("WHILE")) || (id2.equals("BREAK"))
-                                    || (id2.equals("SWITCH")) || (id2.equals("CASE")) || (id2.equals("CONST"))) {
+                            if ((id.toString().equals("FOR")) || (id.toString().equals("WHILE")) || (id.toString().equals("BREAK"))
+                                    || (id.toString().equals("SWITCH")) || (id.toString().equals("CASE")) || (id.toString().equals("CONST"))) {
                                 SetError(Err.ReservedWordException, pos);
                                 state = States.Error;
                             } else if (id.length() > 12) {
@@ -147,7 +153,7 @@ public class CheckLoopOperator {
                     case V1SQBR2 -> {
                         if (Character.isWhitespace(input.charAt(pos))) {
                             state = States.SPC6;
-                        } else if (input.charAt(pos) == ')'){
+                        } else if (input.charAt(pos) == ')') {
                             state = States.BRK2;
                         } else {
                             SetError(Err.SpaceExpected, pos);
@@ -170,7 +176,7 @@ public class CheckLoopOperator {
                         } else if (input.charAt(pos) == '.') {
                             constant.append(input.charAt(pos));
                             state = States.A1DOT;
-                        } else if(input.charAt(pos) == ')'){
+                        } else if (input.charAt(pos) == ')') {
                             if (!((constant.length() < 6) && (Integer.parseInt(constant.toString()) >= -32768) &&
                                     (Integer.parseInt(constant.toString()) <= 32767))) {
                                 SetError(Err.IntBoundsException, pos);
@@ -215,9 +221,9 @@ public class CheckLoopOperator {
                             state = States.REL3;
                         } else if (input.charAt(pos) == '>') {
                             state = States.REL4;
-                        }else if (input.charAt(pos) == '&') {
+                        } else if (input.charAt(pos) == '&') {
                             state = States.LOG1;
-                        }else if (input.charAt(pos) == '|') {
+                        } else if (input.charAt(pos) == '|') {
                             state = States.LOG2;
                         } else if (!(Character.isWhitespace(input.charAt(pos)))) {
                             SetError(Err.UnexpectedSymbolException, pos);
@@ -257,7 +263,7 @@ public class CheckLoopOperator {
                             state = States.A1E;
                         } else if (Character.isDigit(input.charAt(pos))) {
                             constant.append(input.charAt(pos));
-                        }else if (input.charAt(pos) == ')') {
+                        } else if (input.charAt(pos) == ')') {
                             listOfConst.add(constant.toString());
                             state = States.BRK2;
                         } else if (Character.isWhitespace(input.charAt(pos))) {
@@ -323,9 +329,8 @@ public class CheckLoopOperator {
                     case V1ID2 -> {
                         if (Character.isLetterOrDigit(input.charAt(pos)) || (input.charAt(pos) == '_')) {
                             id.append(input.charAt(pos));
-                            String id2 = id.toString().toUpperCase();
-                            if ((id2.equals("FOR")) || (id2.equals("WHILE")) || (id2.equals("BREAK"))
-                                    || (id2.equals("SWITCH")) || (id2.equals("CASE")) || (id2.equals("CONST"))) {
+                            if ((id.toString().equals("FOR")) || (id.toString().equals("WHILE")) || (id.toString().equals("BREAK"))
+                                    || (id.toString().equals("SWITCH")) || (id.toString().equals("CASE")) || (id.toString().equals("CONST"))) {
                                 SetError(Err.ReservedWordException, pos);
                                 state = States.Error;
                             }
@@ -368,7 +373,7 @@ public class CheckLoopOperator {
                         } else if (Character.isWhitespace(input.charAt(pos))) {
                             listOfConst.add(constant.toString());
                             state = States.SPC6;
-                        }else if (input.charAt(pos) == ')') {
+                        } else if (input.charAt(pos) == ')') {
                             listOfConst.add(constant.toString());
                             state = States.BRK2;
                         } else {
@@ -446,7 +451,7 @@ public class CheckLoopOperator {
                         if (Character.isWhitespace(input.charAt(pos))) {
                             state = States.SPC7;
                         } else {
-                            SetError(Err.SpaceExpected, errPos);
+                            SetError(Err.SpaceExpected, pos);
                             state = States.Error;
                         }
                     }
@@ -500,9 +505,8 @@ public class CheckLoopOperator {
                     case ID3 -> {
                         if (Character.isLetterOrDigit(input.charAt(pos)) || (input.charAt(pos) == '_')) {
                             id.append(input.charAt(pos));
-                            String id2 = id.toString().toUpperCase();
-                            if ((id2.equals("FOR")) || (id2.equals("WHILE")) || (id2.equals("BREAK"))
-                                    || (id2.equals("SWITCH")) || (id2.equals("CASE")) || (id2.equals("CONST"))) {
+                            if ((id.toString().equals("FOR")) || (id.toString().equals("WHILE")) || (id.toString().equals("BREAK"))
+                                    || (id.toString().equals("SWITCH")) || (id.toString().equals("CASE")) || (id.toString().equals("CONST"))) {
                                 SetError(Err.ReservedWordException, pos);
                                 state = States.Error;
                             }
@@ -645,9 +649,8 @@ public class CheckLoopOperator {
                     case ID4 -> {
                         if (Character.isLetterOrDigit(input.charAt(pos)) || (input.charAt(pos) == '_')) {
                             id.append(input.charAt(pos));
-                            String id2 = id.toString().toUpperCase();
-                            if ((id2.equals("FOR")) || (id2.equals("WHILE")) || (id2.equals("BREAK"))
-                                    || (id2.equals("SWITCH")) || (id2.equals("CASE")) || (id2.equals("CONST"))) {
+                            if ((id.toString().equals("FOR")) || (id.toString().equals("WHILE")) || (id.toString().equals("BREAK"))
+                                    || (id.toString().equals("SWITCH")) || (id.toString().equals("CASE")) || (id.toString().equals("CONST"))) {
                                 SetError(Err.ReservedWordException, pos);
                                 state = States.Error;
                             }
@@ -717,7 +720,7 @@ public class CheckLoopOperator {
                     case SQBR4 -> {
                         if (Character.isWhitespace(input.charAt(pos))) {
                             state = States.SPC11;
-                        } else if(input.charAt(pos) == ')'){
+                        } else if (input.charAt(pos) == ')') {
                             state = States.BRK2;
                         } else {
                             SetError(Err.SpaceExpected, pos);
@@ -808,9 +811,8 @@ public class CheckLoopOperator {
                     case V2ID -> {
                         if (Character.isLetterOrDigit(input.charAt(pos)) || (input.charAt(pos) == '_')) {
                             id.append(input.charAt(pos));
-                            String id2 = id.toString().toUpperCase();
-                            if ((id2.equals("FOR")) || (id2.equals("WHILE")) || (id2.equals("BREAK"))
-                                    || (id2.equals("SWITCH")) || (id2.equals("CASE")) || (id2.equals("CONST"))) {
+                            if ((id.toString().equals("FOR")) || (id.toString().equals("WHILE")) || (id.toString().equals("BREAK"))
+                                    || (id.toString().equals("SWITCH")) || (id.toString().equals("CASE")) || (id.toString().equals("CONST"))) {
                                 SetError(Err.ReservedWordException, pos);
                                 state = States.Error;
                             }
@@ -903,9 +905,8 @@ public class CheckLoopOperator {
                     case V2ID2 -> {
                         if (Character.isLetterOrDigit(input.charAt(pos)) || (input.charAt(pos) == '_')) {
                             id.append(input.charAt(pos));
-                            String id2 = id.toString().toUpperCase();
-                            if ((id2.equals("FOR")) || (id2.equals("WHILE")) || (id2.equals("BREAK"))
-                                    || (id2.equals("SWITCH")) || (id2.equals("CASE")) || (id2.equals("CONST"))) {
+                            if ((id.toString().equals("FOR")) || (id.toString().equals("WHILE")) || (id.toString().equals("BREAK"))
+                                    || (id.toString().equals("SWITCH")) || (id.toString().equals("CASE")) || (id.toString().equals("CONST"))) {
                                 SetError(Err.ReservedWordException, pos);
                                 state = States.Error;
                             }
@@ -1035,9 +1036,8 @@ public class CheckLoopOperator {
                     case T3ID1 -> {
                         if (Character.isLetterOrDigit(input.charAt(pos)) || (input.charAt(pos) == '_')) {
                             id.append(input.charAt(pos));
-                            String id2 = id.toString().toUpperCase();
-                            if ((id2.equals("FOR")) || (id2.equals("WHILE")) || (id2.equals("BREAK"))
-                                    || (id2.equals("SWITCH")) || (id2.equals("CASE")) || (id2.equals("CONST"))) {
+                            if ((id.toString().equals("FOR")) || (id.toString().equals("WHILE")) || (id.toString().equals("BREAK"))
+                                    || (id.toString().equals("SWITCH")) || (id.toString().equals("CASE")) || (id.toString().equals("CONST"))) {
                                 SetError(Err.ReservedWordException, pos);
                                 state = States.Error;
                             }
@@ -1126,9 +1126,8 @@ public class CheckLoopOperator {
                     case T3ID2 -> {
                         if (Character.isLetterOrDigit(input.charAt(pos)) || (input.charAt(pos) == '_')) {
                             id.append(input.charAt(pos));
-                            String id2 = id.toString().toUpperCase();
-                            if ((id2.equals("FOR")) || (id2.equals("WHILE")) || (id2.equals("BREAK"))
-                                    || (id2.equals("SWITCH")) || (id2.equals("CASE")) || (id2.equals("CONST"))) {
+                            if ((id.toString().equals("FOR")) || (id.toString().equals("WHILE")) || (id.toString().equals("BREAK"))
+                                    || (id.toString().equals("SWITCH")) || (id.toString().equals("CASE")) || (id.toString().equals("CONST"))) {
                                 SetError(Err.ReservedWordException, pos);
                                 state = States.Error;
                             }
@@ -1210,7 +1209,7 @@ public class CheckLoopOperator {
                     case T3SQBR2 -> {
                         if (Character.isWhitespace(input.charAt(pos))) {
                             state = States.T3SPC4;
-                        } else if (input.charAt(pos) == ';'){
+                        } else if (input.charAt(pos) == ';') {
                             state = States.SMCOL;
                         } else {
                             SetError(Err.SpaceExpected, pos);
@@ -1281,7 +1280,6 @@ public class CheckLoopOperator {
                         }
                     }
                     case CURLY2 -> state = States.Final;
-                    default -> state = States.Error;
                 }
             }
             pos++;
