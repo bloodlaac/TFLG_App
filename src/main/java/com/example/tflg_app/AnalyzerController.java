@@ -24,19 +24,6 @@ public class AnalyzerController implements Initializable {
             Result result = CheckLoopOperator.Check(newValue);
             idField.setText(result.getListOfIDs().toString());
             constField.setText(result.getListOfConst().toString());
-            /*if (result.getErrType() == Err.NoError) {
-                errorField.setText("");
-            } else if ((result.getErrType() == Err.UnrecognizedError)
-                    || (result.getErrType() == Err.OverflowExpressions)
-                    || (result.getErrType() == Err.ReservedWordException)
-                    || (result.getErrType() == Err.IntBoundsException)
-                    || (result.getErrType() == Err.OverflowID)
-                    || (result.getErrType() == Err.UnexpectedSymbolException)
-                    || (result.getErrType() == Err.OutOfRange)){
-                errorField.setText(result.getErr() + newValue.substring(0, result.getErrPosition()));
-            } else {
-                errorField.setText(result.getErr() + " на позиции " + result.getErrPosition());
-            }*/
 
             if (result.getErrType() != Err.NoError){
                 errorField.setText("Ошибка: " + result.getErr() + " на позиции "
