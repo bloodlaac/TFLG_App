@@ -1,7 +1,5 @@
 package com.example.tflg_app;
 
-import com.example.tflg_app.Err;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -57,7 +55,7 @@ public class Result {
                 return "Ожидается цифра или минус";
             }
             case BracketSpaceExpected -> {
-                return "Ожидается кавычка или пробел";
+                return "Ожидается скобка или пробел";
             }
             case EqualsExpected -> {
                 return "Ожидается =";
