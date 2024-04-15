@@ -26,10 +26,10 @@ public class AnalyzerController implements Initializable {
             constField.setText(result.getListOfConst().toString());
 
             if (result.getErrType() != Err.NoError){
-                errorField.setText("Ошибка: " + result.getErr() + " на позиции "
+                errorField.setText(result.getErr() + " на позиции "
                         + result.getErrPosition() + " после " + newValue.substring(0, result.getErrPosition()));
-                idField.setText("");
-                constField.setText("");
+//                idField.setText("");
+//                constField.setText("");
             }
             else {
                 errorField.setText("");

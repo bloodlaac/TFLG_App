@@ -31,28 +31,28 @@ public class Result {
     public String getErr() {
         switch (err) {
             case NoError -> {
-                return "Нет ошибок.";
+                return "Нет ошибок";
             }
             case OutOfRange -> {
                 return "Выход за границы анализируемой строки.";
             }
             case LetterExpected -> {
-                return "Ожидается буква.";
+                return "Ожидается буква или _";
             }
             case LetterDigitExpected -> {
-                return "Ожидается буква или цифра.";
+                return "Ожидается буква, цифра или _";
             }
             case DigitExpected -> {
-                return "Ожидается цифра.";
+                return "Ожидается цифра";
             }
             case SpaceExpected -> {
                 return "Ожидается пробел";
             }
             case DotExpected -> {
-                return "Ожидается точка";
+                return "Ожидается .";
             }
             case DigitMinusExpected -> {
-                return "Ожидается цифра или минус";
+                return "Ожидается цифра или -";
             }
             case BracketSpaceExpected -> {
                 return "Ожидается скобка или пробел";
@@ -67,22 +67,22 @@ public class Result {
                 return "Ожидается &";
             }
             case UnexpectedSymbolException -> {
-                return "Недопустимый символ";
+                return "Ожидается пробел или символ из семантики";
             }
             case OverflowID -> {
-                return "Недопустимая длина идентификатора.";
+                return "Недопустимая длина идентификатора";
             }
             case IntBoundsException -> {
-                return "Недопустимое значение целого числа.";
+                return "Недопустимое значение целого числа";
             }
             case ReservedWordException -> {
-                return "ID не должен быть зарезервированным словом.";
+                return "ID не должен быть зарезервированным словом";
             }
             case OverflowExpressions -> {
-                return "Допустимое количество простых выражений превышено.";
+                return "Допустимое количество простых выражений превышено";
             }
             case UnrecognizedError -> {
-                return "Неизвестная ошибка.";
+                return "Неизвестная ошибка";
             }
         }
         return null;

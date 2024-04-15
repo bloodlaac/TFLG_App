@@ -450,8 +450,21 @@ public class CheckLoopOperator {
                     case REL -> {
                         if (Character.isWhitespace(input.charAt(pos))) {
                             state = States.SPC7;
+                        } else if (input.charAt(pos) == '0') {
+                            constant = new StringBuilder(String.valueOf(input.charAt(pos)));
+                            listOfConst.add(constant.toString());
+                            state = States.ZERO3;
+                        } else if (Character.isDigit(input.charAt(pos)) && input.charAt(pos) != '0') {
+                            constant = new StringBuilder(String.valueOf(input.charAt(pos)));
+                            state = States.DIGIT4;
+                        } else if (input.charAt(pos) == '-') {
+                            constant = new StringBuilder(String.valueOf(input.charAt(pos)));
+                            state = States.MINUS3;
+                        } else if (Character.isLetter(input.charAt(pos)) || (input.charAt(pos) == '_')) {
+                            id = new StringBuilder(String.valueOf(input.charAt(pos)));
+                            state = States.ID3;
                         } else {
-                            SetError(Err.SpaceExpected, pos);
+                            SetError(Err.UnexpectedSymbolException, pos);
                             state = States.Error;
                         }
                     }
@@ -774,7 +787,7 @@ public class CheckLoopOperator {
                             } else if (input.charAt(pos) == ')') {
                                 state = States.BRK2;
                             } else {
-                                SetError(Err.UnrecognizedError, pos);
+                                SetError(Err.UnexpectedSymbolException, pos);
                                 state = States.Error;
                             }
                         }
@@ -838,7 +851,7 @@ public class CheckLoopOperator {
                             } else if (input.charAt(pos) == '=') {
                                 state = States.EQUAL;
                             } else {
-                                SetError(Err.UnrecognizedError, pos);
+                                SetError(Err.UnexpectedSymbolException, pos);
                                 state = States.Error;
                             }
                         }
@@ -888,7 +901,7 @@ public class CheckLoopOperator {
                             listOfConst.add(constant.toString());
                             state = States.V2SQBR2;
                         } else {
-                            SetError(Err.UnrecognizedError, pos);
+                            SetError(Err.UnexpectedSymbolException, pos);
                             state = States.Error;
                         }
                     }
@@ -968,7 +981,7 @@ public class CheckLoopOperator {
                                 constant = new StringBuilder(String.valueOf(input.charAt(pos)));
                                 state = States.T3ZERO1;
                             } else {
-                                SetError(Err.UnrecognizedError, pos);
+                                SetError(Err.UnexpectedSymbolException, pos);
                                 state = States.Error;
                             }
                         }
@@ -1088,7 +1101,7 @@ public class CheckLoopOperator {
                                 constant = new StringBuilder(String.valueOf(input.charAt(pos)));
                                 state = States.T3DIGIT4;
                             } else {
-                                SetError(Err.UnrecognizedError, pos);
+                                SetError(Err.UnexpectedSymbolException, pos);
                                 state = States.Error;
                             }
                         }
@@ -1257,7 +1270,7 @@ public class CheckLoopOperator {
                                 (input.charAt(pos) == '/') || (input.charAt(pos) == '%')) {
                             state = States.MATH;
                         } else if (!(Character.isWhitespace(input.charAt(pos)))) {
-                            SetError(Err.UnrecognizedError, pos);
+                            SetError(Err.UnexpectedSymbolException, pos);
                             state = States.Error;
                         }
                     }
