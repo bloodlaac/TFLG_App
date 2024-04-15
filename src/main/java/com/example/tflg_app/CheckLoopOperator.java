@@ -482,6 +482,7 @@ public class CheckLoopOperator {
                             state = States.Error;
                         }
                     }
+                    // meow
                     case SPC7 -> {
                         if (!Character.isWhitespace(input.charAt(pos))) {
                             if (input.charAt(pos) == '0') {
